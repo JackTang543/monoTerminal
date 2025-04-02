@@ -421,7 +421,7 @@ int sDRV_W25QxxJV_Init(){
     //     return -1;
     // }
 
-    dbg_println("w25 id=0x%0X",QSPI_FLASH_ReadID());
+    // dbg_println("w25 id=0x%0X",QSPI_FLASH_ReadID()); 
 
 
     //先擦除当前扇区

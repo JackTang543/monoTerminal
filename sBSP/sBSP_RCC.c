@@ -3,7 +3,7 @@
 
 
 
-void sBSP_RCC_Init(){
+int sBSP_RCC_Init(){
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
@@ -19,7 +19,9 @@ void sBSP_RCC_Init(){
     RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
     RCC_OscInitStruct.PLL.PLLQ = 4;
     RCC_OscInitStruct.PLL.PLLR = 2;
-    HAL_RCC_OscConfig(&RCC_OscInitStruct);
+    if(HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK){
+        return -1;
+    }
 
     RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
                                     |RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
@@ -28,7 +30,9 @@ void sBSP_RCC_Init(){
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
     RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-    HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3);
+    if(HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK){
+        return -2;
+    }
 
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
     
@@ -41,11 +45,11 @@ void sBSP_RCC_Init(){
     PeriphClkInitStruct.Clk48ClockSelection = RCC_CLK48CLKSOURCE_PLLI2SQ;
     PeriphClkInitStruct.SdioClockSelection = RCC_SDIOCLKSOURCE_CLK48;
     PeriphClkInitStruct.PLLI2SSelection = RCC_PLLI2SCLKSOURCE_PLLSRC;
-    HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
+    if(HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK){
+        return -3;
+    }
 
-
-
-    
+    return 0;
 }
 
 

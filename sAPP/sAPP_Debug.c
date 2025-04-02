@@ -51,6 +51,15 @@ void sDBG_WarnPrintf(const char *fmt,...){
     sBSP_UART_Debug_Printf("[WARN] %s",fmt_buf);
 }
 
+void sDBG_ErrorPrintf(const char *fmt,...){
+    va_list args;
+    va_start(args, fmt);
+    vsprintf(fmt_buf, fmt, args);
+    va_end(args);
+    //串口1输出
+    sBSP_UART_Debug_Printf("[ERR ] %s",fmt_buf);
+}
+
 
 
 void Error_Handler(){

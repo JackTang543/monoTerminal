@@ -15,7 +15,7 @@
  * 串口 完成
  * swd下载 完成
  * 蜂鸣器 完成
- * todo sd卡sdio 4线
+ * todo sd卡sdio 4线0
  * todo w25q128 quadSPI
  * 2.9寸单色LCD
  * todo ds3231
@@ -28,8 +28,10 @@
 
 
 int main(){
-    HAL_Init();
-    sBSP_RCC_Init();
+    sAPP_SYS_SystemInit();
+    sAPP_SYS_PeriphrialInit();
+
+    
 
     cm_backtrace_init("monoTerminal","v1","v1.0");
 
@@ -57,6 +59,7 @@ int main(){
     HAL_Delay(100);
 
     dbg_println("系统主频:%uMHz",HAL_RCC_GetSysClockFreq() / 1'000'000);
+
     dbg_println("monoTerminal 初始化完成");
 
 

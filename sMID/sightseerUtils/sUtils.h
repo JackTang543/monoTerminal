@@ -4,15 +4,17 @@ extern "C" {
 #endif
 
 
+#include "stdint.h"
 
 
 
-#include "stm32f4xx_hal.h"
 
 
 
 
-int sBSP_RCC_Init();
+#define SUTILS_OUTPUT_ENABLE
+
+
 
 
 
@@ -24,4 +26,6 @@ int sBSP_RCC_Init();
 #ifdef __cplusplus
 }
 #endif
+
+
 
