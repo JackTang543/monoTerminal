@@ -9,6 +9,9 @@
  * 目前只支持STM32HAL库
  * 在PULSE_LOW模式时,有bug,在初始时状态不对,过一会儿就没问题了
  * 
+ * v1.1 250309 bySightseer. inHNIP9607Lab
+ * 增加了用户自定义输出回调函数的功能
+ * 
  */
 
 /**
@@ -62,8 +65,12 @@ void sBinOutDrv::init(){
 
 //输出
 inline void sBinOutDrv::output(uint16_t id,GPIO_TypeDef* group,uint16_t pin,GPIO_PinState lv){
-    HAL_GPIO_WritePin(group,pin,(GPIO_PinState)lv);
-    //sBSP_UART_Debug_Printf("id=%u,lv=%u,tick=%u\n",id,lv,getTick());
+    if(list[id].user_output_callback != nullptr){
+        list[id].user_output_callback(id,(bool)lv);
+    }else{
+        HAL_GPIO_WritePin(group,pin,(GPIO_PinState)lv);
+    }
+    // sBSP_UART_Debug_Printf("id=%u,lv=%u,tick=%u\n",id,lv,getTick());
 }
 
 //获取滴答定时器
@@ -83,9 +90,22 @@ void sBinOutDrv::devGPIOInit(GPIO_TypeDef* group,uint16_t pin){
 }
 
 //添加设备,传入GPIO组,引脚,器件ID号
+int sBinOutDrv::addDev(uint16_t _id,UserOutputCb cb){
+    //合法性检查
+    if(_id > SBOD_MAX_DEVICES){return -1;}
+    list[_id].is_activate  = true;  //默认激活
+    list[_id].init_level   = LEVEL::LOW;
+    list[_id].user_output_callback = cb;
+    list[_id].now_level    = LEVEL::LOW;
+    list[_id].out_level    = LEVEL::LOW;
+    
+    return 0;
+}
+
+//添加设备,传入GPIO组,引脚,器件ID号
 int sBinOutDrv::addDev(uint16_t _id,GPIO_TypeDef* _group,uint16_t _pin){
     //合法性检查
-    if(_id > SBOD_MAX_DEVICES || _group == nullptr){return -1;}
+    if(_id > SBOD_MAX_DEVICES){return -1;}
 
     list[_id].gpio.group   = _group;
     list[_id].gpio.pin     = _pin;
@@ -101,16 +121,27 @@ int sBinOutDrv::addDev(uint16_t _id,GPIO_TypeDef* _group,uint16_t _pin){
 //添加设备,传入GPIO组,引脚,器件ID号,是否激活
 int sBinOutDrv::addDev(uint16_t _id,GPIO_TypeDef* _group,uint16_t _pin,bool _is_activate){
     //合法性检查
-    if(_id > SBOD_MAX_DEVICES || _group == nullptr){return -1;}
+    if(_id > SBOD_MAX_DEVICES){return -1;}
 
     list[_id].gpio.group   = _group;
     list[_id].gpio.pin     = _pin;
     list[_id].is_activate  = _is_activate;
     list[_id].init_level   = LEVEL::LOW;
+    list[_id].now_level    = LEVEL::LOW;
+    list[_id].out_level    = LEVEL::LOW;
     
     //初始化GPIO
     devGPIOInit(_group,_pin);
     
+    return 0;
+}
+
+//配置用户输出回调函数
+int sBinOutDrv::confUserOutputCb(uint16_t _id,UserOutputCb cb){
+    //合法性检查
+    if(_id > SBOD_MAX_DEVICES){return -1;}
+
+    list[_id].user_output_callback = cb;
     return 0;
 }
 
@@ -287,6 +318,8 @@ void sBinOutDrv::mode_process(uint16_t id){
         pulseHighProcess(id);
     }
 }
+
+#include "sAPP_Debug.h"
 
 //实测只需要3us左右就能完成
 void sBinOutDrv::update(){

@@ -6,8 +6,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "sBSP_UART.h"
-
 
 #define SBOD_MAX_DEVICES 2
 
@@ -33,7 +31,7 @@ public:
         HIGH = 1,
     };
 
-    
+    using UserOutputCb = void(*)(uint16_t id,bool lv);
 
 
 
@@ -44,7 +42,9 @@ public:
     void init();
 
     int addDev(uint16_t _id,GPIO_TypeDef* _group,uint16_t _pin);
+    int addDev(uint16_t _id,UserOutputCb cb);
     int addDev(uint16_t _id,GPIO_TypeDef* _group,uint16_t _pin,bool _is_activate);
+    int confUserOutputCb(uint16_t _id,UserOutputCb cb);
     int confDevMode(uint16_t _id,DEV_MODE _mode,LEVEL _init_level);
     int confTime(uint16_t _id,uint32_t _period,uint32_t _high_period);
 
@@ -79,7 +79,7 @@ private:
         LEVEL now_level;     //用于跟踪当前电平
         DEV_MODE mode;    //设备模式
         uint16_t pulse_count; //脉冲计数
-    
+        UserOutputCb user_output_callback;
     }DEVICE;
 
     //存储器件的数组

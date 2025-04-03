@@ -8,21 +8,6 @@ extern "C" {
 #include "stm32f4xx_hal.h"
 
 
-#define dbg_printf sDBG_Printf
-#define dbg_println sDBG_Println
-#define dbg_info   sDBG_InfoPrintf
-#define dbg_warn   sDBG_WarnPrintf
-#define dbg_error   sDBG_ErrorPrintf
-
-void sDBG_Printf(const char *fmt,...);
-void sDBG_Println(const char *fmt,...);
-void sDBG_InfoPrintf(const char *fmt,...);
-void sDBG_WarnPrintf(const char *fmt,...);
-void sDBG_ErrorPrintf(const char *fmt,...);
-
-
-void sBSP_UART_Debug_Printf(const char *fmt,...);
-
 void Error_Handler();
 void Warning_Handler(uint8_t* file, uint32_t line);
 void assert_failed(uint8_t* file, uint32_t line);

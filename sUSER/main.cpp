@@ -28,39 +28,30 @@
 
 
 int main(){
+    sAPP_SYS_KernelInit();
     sAPP_SYS_SystemInit();
-    sAPP_SYS_PeriphrialInit();
 
     
-
-    cm_backtrace_init("monoTerminal","v1","v1.0");
-
-    sBSP_TIM_BuzzerInit();
-    sBSP_TIM_BuzzerSetFreq(2700);
-    sBSP_TIM_BuzzerSet(50.0f);
-    sBSP_TIM_BuzzerSetEN(0);
     
     usb_device_init();
 
-    sBSP_UART_Debug_Init(115200);
 
     sAPP_Btns_Init();
-    sAPP_OutputDev_Init();
 
     sDRV_EC11_Init();
 
     sBSP_QSPI_Init();
     if(sDRV_W25QxxJV_Init() != 0){
-        dbg_println("W25Qxx初始化失败");
+        // dbg_println("W25Qxx初始化失败");
     }
 
     sAPP_Tasks_CreateAll();
     
     HAL_Delay(100);
 
-    dbg_println("系统主频:%uMHz",HAL_RCC_GetSysClockFreq() / 1'000'000);
+    log_info("系统主频:%uMHz",HAL_RCC_GetSysClockFreq() / 1'000'000);
 
-    dbg_println("monoTerminal 初始化完成");
+    log_info("monoTerminal 初始化完成");
 
 
     sBSP_SPI_LCDInit();
@@ -68,6 +59,9 @@ int main(){
     oled.init(SDRV_ST7305_W,SDRV_ST7305_H);
     sDRV_ST7305_SetInvShowMode(1);
     sDRV_ST7305_SetAll(0x0);
+
+    sAPP_GUI_Init();
+    sAPP_GUI_WeightsInit();
 
 
     
@@ -84,9 +78,9 @@ int main(){
 
 
     sAPP_Tasks_CreateAll();
-    dbg_println("Current free heap size: %u bytes", (unsigned int)xPortGetFreeHeapSize());
-    dbg_println("FreeRTOS启动任务调度");
-    // vTaskStartScheduler();
+    log_info("Current free heap size: %u bytes", (unsigned int)xPortGetFreeHeapSize());
+    log_info("FreeRTOS启动任务调度");
+    vTaskStartScheduler();
 
     int i = 0;
 

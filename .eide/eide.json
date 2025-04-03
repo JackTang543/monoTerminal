@@ -13,7 +13,8 @@
     "sMID/FreeRTOS",
     "sMID/STM32_USB_Device_Library",
     "sMID/cm_backtrace",
-    "sMID/sightseerUtils"
+    "sMID/sightseerUtils",
+    "sMID/lvgl"
   ],
   "virtualFolder": {
     "name": "<virtual_root>",
@@ -116,7 +117,10 @@
           "sMID/STM32_USB_Device_Library/Class/MSC/Inc",
           "sMID/STM32_USB_Device_Library/Core/Inc",
           "sMID/STM32_USB_Device_Library",
-          "sMID/cm_backtrace"
+          "sMID/cm_backtrace",
+          "sMID/sightseerUtils",
+          "sMID/lvgl",
+          "sAPP/EEZ_UI"
         ],
         "libList": [],
         "defineList": [
@@ -158,11 +162,12 @@
             "output-debug-info": "enable"
           },
           "c/cpp-compiler": {
-            "optimization": "level-0",
+            "optimization": "level-1",
             "c99-mode": true,
             "warnings": "unspecified",
             "language-c": "gnu17",
-            "language-cpp": "gnu++17"
+            "language-cpp": "gnu++17",
+            "link-time-optimization": true
           },
           "asm-compiler": {
             "$use": "asm-auto"

@@ -2,7 +2,7 @@
 
 #include "sDRV_EC11.h"
 
-
+#include "defines.h"
 #include "sAPP_Debug.h"
 
 
@@ -14,6 +14,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
         sDRV_EC11_TrigProcess();
     }
 
+}
+
+
+bool sBSP_GPIO_GetEncoder1KEY(){
+    return !!HAL_GPIO_ReadPin(KEY_ECKEY_GPIO,KEY_ECKEY_GPIO_PIN);
 }
 
 

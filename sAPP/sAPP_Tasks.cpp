@@ -6,18 +6,35 @@ static void print_tasks_mang();
 
 
 
-static void task_dev(void* param){
-    dbg_printf("inited\n");
-
+static void task_btn_dev(void* param){
     for(;;){
-        sGBD_Handler();
+        // sGBD_Handler();
+
+        // int16_t val = sDRV_EC11_GetEncoder();
+        // if(val != 0){
+            // BinOutDrv.startPulse(BOD_BUZZER_ID,20);
+            // dbg_printf("Encoder:%d\n",val);
+        // }
+
+        vTaskDelay(10 / portTICK_PERIOD_MS);
+    }
+}
+
+static void task_bod_dev(void* param){
+    for(;;){
         BinOutDrv.update();
 
-        int16_t val = sDRV_EC11_GetEncoder();
-        if(val != 0){
-            dbg_printf("Encoder:%d\n",val);
-        }
+        
+        vTaskDelay(10 / portTICK_PERIOD_MS);
+    }
+}
+
+static void task_screen_flush(void* param){
+    for(;;){
+
+        lv_task_handler();
         vTaskDelay(20 / portTICK_PERIOD_MS);
+
     }
 }
 
@@ -32,7 +49,11 @@ void tasks_mang(void* param){
 
 
 void sAPP_Tasks_CreateAll(){
-    xTaskCreate(task_dev      , "devices"      , 1024 / sizeof(int), NULL, 2, NULL);
+    xTaskCreate(task_btn_dev      , "btn_dev"      , 512 / sizeof(int), NULL, 2, NULL);
+    xTaskCreate(task_bod_dev      , "bod_dev"      , 512 / sizeof(int), NULL, 2, NULL);
+    xTaskCreate(task_screen_flush , "scr_flush"    , 4096/ sizeof(int), NULL, 3, NULL);
+
+
     // xTaskCreate(tasks_mang     , "TaskMang"     , 2048 / sizeof(int), NULL, 1, NULL);
 
 

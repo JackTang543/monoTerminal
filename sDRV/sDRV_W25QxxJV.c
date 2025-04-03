@@ -162,7 +162,7 @@ static int portQSPIInit(){
 
     /* QSPI存储器复位 */
     if (portResetMemory() != 0) {
-        dbg_println("QSPI_ResetMemory error");
+        // dbg_println("QSPI_ResetMemory error");
         return -1;
     }
 
@@ -174,7 +174,7 @@ static int portQSPIInit(){
 
     /* 使能写操作 */
     if (portQSPIWriteEnable() != 0) {
-        dbg_println("QSPI_WriteEnable error");
+        // dbg_println("QSPI_WriteEnable error");
         return -1;
     }
      /*设置四路使能的状态寄存器，使能四通道IO2和IO3引脚 */
@@ -229,11 +229,11 @@ static uint32_t QSPI_FLASH_ReadID(void){
     s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
 if(HAL_QSPI_Command(&hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) {
-        dbg_printf("something wrong ....\r\n");
+        // dbg_printf("something wrong ....\r\n");
         Error_Handler();
     }
     if(HAL_QSPI_Receive(&hqspi, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE)!= HAL_OK) {
-        dbg_printf("something wrong ....\r\n");
+        // dbg_printf("something wrong ....\r\n");
         Error_Handler();
     }
 
@@ -403,16 +403,16 @@ if(HAL_QSPI_Command(&hqspi, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_O
 int sDRV_W25QxxJV_Init(){
     //初始化QSPI
     if(portQSPIInit() != 0){
-        dbg_println("portQSPIInit error");
+        // dbg_println("portQSPIInit error");
     }
 
     if(portResetMemory() != 0){
-        dbg_println("portResetMemory error");
+        // dbg_println("portResetMemory error");
     }
 
     //写使能
     if(portQSPIWriteEnable() != 0){
-        dbg_println("portQSPIWriteEnable error");
+        // dbg_println("portQSPIWriteEnable error");
     }
 
     
@@ -426,7 +426,7 @@ int sDRV_W25QxxJV_Init(){
 
     //先擦除当前扇区
     if(BSP_QSPI_Erase_Block(0) != 0){
-        dbg_println("BSP_QSPI_Erase_Block error");
+        // dbg_println("BSP_QSPI_Erase_Block error");
     }
     
     // //写入128字节的0x81数据到0x0地址,然后读取回来,打印出来

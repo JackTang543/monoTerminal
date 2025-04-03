@@ -14,9 +14,9 @@
 #define KEY_BACK_GPIO         GPIOB
 #define KEY_BACK_GPIO_PIN     GPIO_PIN_12
 
-#define KEY_ECKEY_GPIO_CLK_EN __GPIOC_CLK_ENABLE
-#define KEY_ECKEY_GPIO        GPIOC
-#define KEY_ECKEY_GPIO_PIN    GPIO_PIN_0
+#define KEY_ECKEY_GPIO_CLK_EN __GPIOB_CLK_ENABLE
+#define KEY_ECKEY_GPIO        GPIOB
+#define KEY_ECKEY_GPIO_PIN    GPIO_PIN_15
 
 
 
@@ -55,6 +55,7 @@ static void trig(uint8_t btn_id,ev_flag_t btn_ev){
 
     //打印按键id的事件
     if(btn_ev == ev_pres){
+        BinOutDrv.startPulse(BOD_BUZZER_ID,50);
         // dbg_println("btn_id:%u,press",btn_id);
 
 

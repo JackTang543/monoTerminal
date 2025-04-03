@@ -18,12 +18,14 @@
 #include "sAPP_Debug.h"
 #include "sAPP_Tasks.hpp"
 #include "sAPP_Btns.hpp"
-#include "sAPP_OutputDev.hpp"
 #include "sAPP_Sys.hpp"
+#include "sAPP_GUI.hpp"
 
 /*library layer*/
 #include "sBinOutDev.hpp"
 #include "sGenBtnDrv2.h"
+
+#include "lvgl.h"
 
 /*middleware layer*/
 #include "FreeRTOS.h"
@@ -31,10 +33,13 @@
 #include "semphr.h"
 #include "usb_device.h"
 #include "cm_backtrace.h"
+#include "sUtils.h"
+
 
 /*driver layer*/
 #include "sDRV_EC11.h"
 #include "sDRV_W25QxxJV.h"
+#include "sDRV_ST7305.h"
 
 /*BSP layer*/
 #include "sBSP_RCC.h"
@@ -42,6 +47,7 @@
 #include "sBSP_SPI.h"
 #include "sBSP_TIM.h"
 #include "sBSP_QSPI.h"
+#include "sBSP_GPIO.h"
 
 
 
