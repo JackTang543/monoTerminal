@@ -12,13 +12,11 @@ static void lvgl_log_cb(lv_log_level_t level, const char* buf){
 
 
 #include "sG2D.hpp"
-
+#include "sDWTLib.hpp"
 
 IRAM_ATTR static void lvgl_flush_cb(lv_display_t* disp, const lv_area_t* area, uint8_t* px_map) {
     // uint16_t *buf16 = (uint16_t *)px_map;
     uint8_t *buf8 = (uint8_t *)px_map;
-
-
     
     int32_t x, y;
     uint16_t color;
@@ -26,20 +24,17 @@ IRAM_ATTR static void lvgl_flush_cb(lv_display_t* disp, const lv_area_t* area, u
     // oled.clear();
     // oled.setAll(0);
 
-
     // 遍历区域内的每个点
+    dwt.start();
+
+
     for (y = area->y1; y <= area->y2; y++) {
         for (x = area->x1; x <= area->x2; x++) {
             // 获取颜色值
             color = buf8[(y - area->y1) * (area->x2 - area->x1 + 1) + (x - area->x1)];
 
-            if(x > SDRV_ST7305_W || y > SDRV_ST7305_H){
-                log_info("x=%d,y=%d,1",x,y);
-            }
 
             if(color > 60){
-                
-
                 oled.setDot(x, y, 1);
             }else{
                 oled.setDot(x, y, 0);
@@ -48,11 +43,16 @@ IRAM_ATTR static void lvgl_flush_cb(lv_display_t* disp, const lv_area_t* area, u
             px_map++;
         }
     }
+    dwt.end();
+    
 
 
     // oled.revArea(10,10,100,100);
 
+    //34us
     oled.handler();
+
+    // log_printfln("us=%u",dwt.get_us());
 
     // 通知 LVGL 刷新完成
     lv_display_flush_ready(disp);
@@ -62,14 +62,14 @@ IRAM_ATTR static void lvgl_flush_cb(lv_display_t* disp, const lv_area_t* area, u
 lv_obj_t* label;
 lv_obj_t* label1;
 
-lv_indev_t* indev;
+lv_indev_t* indev_encoder;
+lv_indev_t* indev_key;
 static lv_display_t* screen;
 
 
 
-static void encoder1_read_cb(lv_indev_t * _indev, lv_indev_data_t * data){
-    if(_indev == indev){
-
+static void encoder1_read_cb(lv_indev_t * _indev,lv_indev_data_t * data){
+    if(_indev == indev_encoder){
         data->enc_diff = sDRV_EC11_GetEncoder();
         if(data->enc_diff != 0){
             BinOutDrv.startPulse(BOD_BUZZER_ID,20);
@@ -83,50 +83,38 @@ static void encoder1_read_cb(lv_indev_t * _indev, lv_indev_data_t * data){
     }
 }
 
+static void key_read_cb(lv_indev_t * _indev,lv_indev_data_t * data){
+    if(_indev == indev_key){
+
+    }
+}
+
+
 void sAPP_GUI_Init(){
-    /*初始化LVGL*/
     lv_init();
-    //设置滴答定时器回调
     lv_tick_set_cb(HAL_GetTick);
-    //注册日志回调
     lv_log_register_print_cb(lvgl_log_cb);
 
-    //创建屏幕
     screen = lv_display_create(SDRV_ST7305_W,SDRV_ST7305_H);
-    //屏幕旋转
     lv_display_set_rotation(screen,LV_DISPLAY_ROTATION_0);
-    //注册屏幕刷新回调
     lv_display_set_flush_cb(screen,lvgl_flush_cb);
     
-    /*屏幕绘制缓冲区*/
     static uint8_t ALIGN_ATTR(4) lvgl_buf1[0x10000];
-    //单64K缓冲区,180MHz 31FPS 36%CPU delay20ms
-    lv_display_set_buffers(screen,(void*)lvgl_buf1,NULL,sizeof(lvgl_buf1),LV_DISPLAY_RENDER_MODE_FULL);
-
-    //单0x1FFFF缓冲区 FMC最快的时序,180MHz 32FPS 35%CPU delay20ms
-    // lv_display_set_buffers(screen,(void*)SBSP_FMC_SRAM_128KB_3,NULL,0x10000,LV_DISPLAY_RENDER_MODE_PARTIAL);
-
-    //双64K缓冲区,180MHz 31FPS 36%CPU delay20ms
-    // lv_display_set_buffers(screen,(void*)SBSP_FMC_SRAM_128KB_3,(void*)(SBSP_FMC_SRAM_128KB_3 + 0x10000),0x10000,LV_DISPLAY_RENDER_MODE_PARTIAL);
-
-    // lv_display_set_buffers(screen,(void*)SBSP_FMC_SRAM_128KB_0,0,SDRV_ILI9488_H * SDRV_ILI9488_W * 2,LV_DISPLAY_RENDER_MODE_PARTIAL);
-
-
-    
-    
+    // lv_display_set_buffers(screen,(void*)lvgl_buf1,NULL,sizeof(lvgl_buf1),LV_DISPLAY_RENDER_MODE_FULL);
+    lv_display_set_buffers(screen,(void*)lvgl_buf1,NULL,sizeof(lvgl_buf1),LV_DISPLAY_RENDER_MODE_PARTIAL);
 
 
 
     // group = lv_group_create();
     // lv_group_set_default(group);
 
-    indev = lv_indev_create();
-    lv_indev_set_type(indev,LV_INDEV_TYPE_ENCODER);
-    lv_indev_set_read_cb(indev,encoder1_read_cb);
+    indev_encoder = lv_indev_create();
+    lv_indev_set_type(indev_encoder,LV_INDEV_TYPE_ENCODER);
+    lv_indev_set_read_cb(indev_encoder,encoder1_read_cb);
 
-    // indev_touch = lv_indev_create();
-    // lv_indev_set_type(indev_touch,LV_INDEV_TYPE_POINTER);
-    // lv_indev_set_read_cb(indev_touch,touch_read_cb);
+    // indev_key = lv_indev_create();
+    // lv_indev_set_type(indev_key,LV_INDEV_TYPE_BUTTON);
+    // lv_indev_set_read_cb(indev_key,key_read_cb);
 
 
     // lv_obj_t * label2 = lv_label_create(lv_screen_active());
@@ -141,7 +129,8 @@ void sAPP_GUI_Init(){
 
 void sAPP_GUI_WeightsInit(){
     ui_init();
-    lv_indev_set_group(indev,groups.group);
+    lv_indev_set_group(indev_encoder,groups.group);
+    // lv_indev_set_group(indev_key,groups.group);
 }
 
 

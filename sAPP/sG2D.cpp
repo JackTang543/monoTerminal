@@ -361,7 +361,7 @@ void sG2D::handler(){
 
     portUpdateScreen(draw_buf);
     //交换缓冲区,让DMA读取刷屏缓冲区,我写绘制缓冲区
-    swap_buf();
+    // swap_buf();
 }
 
 

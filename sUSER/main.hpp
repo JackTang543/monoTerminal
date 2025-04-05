@@ -24,6 +24,8 @@
 /*library layer*/
 #include "sBinOutDev.hpp"
 #include "sGenBtnDrv2.h"
+#include "sDWTLib.hpp"
+
 
 #include "lvgl.h"
 
@@ -34,7 +36,7 @@
 #include "usb_device.h"
 #include "cm_backtrace.h"
 #include "sUtils.h"
-
+#include "usb_device.h"
 
 /*driver layer*/
 #include "sDRV_EC11.h"
@@ -48,7 +50,7 @@
 #include "sBSP_TIM.h"
 #include "sBSP_QSPI.h"
 #include "sBSP_GPIO.h"
-
+#include "sBSP_DMA.h"
 
 
 

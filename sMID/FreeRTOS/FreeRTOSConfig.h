@@ -128,7 +128,12 @@ header file. */
 //! #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
 #include "sAPP_Debug.h"
 //我的在调试环境中的带串口debug版本(借用HAL库用的断言失败处理)
-#define configASSERT( x ) if( ( x ) == 0 ) {assert_failed((uint8_t *)__FILE__,__LINE__); taskDISABLE_INTERRUPTS(); for( ;; ); }	
+#include "defines.h"
+#ifdef RELEASE_CODE_MODE
+	#define configASSERT( x ) if( ( x ) == 0 ) {taskDISABLE_INTERRUPTS(); for( ;; ); }	
+#else
+	#define configASSERT( x ) if( ( x ) == 0 ) {assert_failed((uint8_t *)__FILE__,__LINE__); taskDISABLE_INTERRUPTS(); for( ;; ); }	
+#endif
 
 	
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS

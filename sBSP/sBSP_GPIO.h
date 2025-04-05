@@ -14,7 +14,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 
 
 bool sBSP_GPIO_GetEncoder1KEY();
-
+bool sBSP_GPIO_GetEnterKEY();
+bool sBSP_GPIO_GetBackKEY();
 
 
 

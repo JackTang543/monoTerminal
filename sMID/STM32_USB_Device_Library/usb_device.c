@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -61,6 +61,8 @@ USBD_HandleTypeDef hUsbDeviceFS;
   * Init USB device Library, add supported class and start the library
   * @retval None
   */
+
+#include "sAPP_Debug.h"
 void usb_device_init(void)
 {
   /* USER CODE BEGIN USB_DEVICE_Init_PreTreatment */

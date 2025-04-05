@@ -1,7 +1,7 @@
 #include "sDRV_ST7305.h"
 
 
-
+#include "sBSP_SPI.h"
 
 
 
@@ -231,9 +231,6 @@
 /*接口*/
 
 
-#define CS_CLK_EN     __GPIOA_CLK_ENABLE
-#define CS_PORT       GPIOA
-#define CS_PIN        GPIO_PIN_4
 
 #define RES_CLK_EN    __GPIOC_CLK_ENABLE
 #define RES_PORT      GPIOC
@@ -248,20 +245,6 @@
 #define TE_PIN       GPIO_PIN_0
 
 
-static void portCSInit(){
-    CS_CLK_EN();
-    GPIO_InitTypeDef gpio = {0};
-    gpio.Mode = GPIO_MODE_OUTPUT_PP;
-    gpio.Pull = GPIO_PULLUP;
-    gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
-    gpio.Pin = CS_PIN;
-    HAL_GPIO_Init(CS_PORT,&gpio);
-    HAL_GPIO_WritePin(CS_PORT,CS_PIN,GPIO_PIN_SET);
-}
-
-static inline void portSetCS(bool Level){
-    HAL_GPIO_WritePin(CS_PORT,CS_PIN,(GPIO_PinState)Level);
-}
 
 static void portRESInit(){
     RES_CLK_EN();
@@ -308,41 +291,20 @@ static bool portGetTE(){
     return (GPIO_PinState)HAL_GPIO_ReadPin(TE_PORT,TE_PIN);
 }
 
-extern SPI_HandleTypeDef hspi1;
-
-void sBSP_SPI_OLED_SendByte(uint8_t byte){
-    HAL_SPI_Transmit(&hspi1,&byte,1,100);
-}
-
-uint8_t sBSP_SPI_OLED_RecvByte(){
-    uint8_t send_byte = 0;
-    HAL_SPI_Receive (&hspi1,&send_byte,1,100);
-    return send_byte;
-}
-
-void sBSP_SPI_OLED_SendBytes(uint8_t *pData,uint16_t Size){
-    HAL_SPI_Transmit(&hspi1,pData,Size,1000);
-    
-    // HAL_SPI_Transmit_DMA(&hspi1,pData,Size);
-    // while(HAL_SPI_GetState(&OLED_SPI_HANDLE) != HAL_SPI_STATE_READY);
-}
 
 static void portWriteCmd(uint8_t command){
     portSetDC(0);
-    portSetCS(0);
-
-    sBSP_SPI_OLED_SendByte(command);
-
-    portSetCS(1);
+    sBSP_SPI_LCDSendByte(command);
 }
 
 static void portWriteParam(uint8_t parameter){
     portSetDC(1);
-    portSetCS(0);
+    sBSP_SPI_LCDSendByte(parameter);
+}
 
-    sBSP_SPI_OLED_SendByte(parameter);
-
-    portSetCS(1);
+static void portWriteBytes(uint8_t *pData,uint16_t Size){
+    portSetDC(1);
+    sBSP_SPI_LCDSendBytes(pData,Size);
 }
 
 static void portDelay(uint32_t ms){
@@ -359,7 +321,6 @@ static void portDelay(uint32_t ms){
 
 
 void sDRV_ST7305_Init(){
-    portCSInit();
     portRESInit();
     portDCInit();
 
@@ -522,12 +483,9 @@ void sDRV_ST7305_FillImg(uint16_t x,uint16_t y,uint16_t img_height,uint16_t img_
     portWriteCmd(0x2C);   //write image data
 
     portSetDC(1);
-    portSetCS(0);
-    
-    sBSP_SPI_OLED_SendBytes(img,img_height * img_weight);
 
+    portWriteBytes((uint8_t*)img,img_height * img_weight);
 
-    portSetCS(1);
 }
 
 
@@ -543,17 +501,15 @@ void sDRV_ST7305_UpdateScreen(uint8_t* gram,uint32_t len_bytes){
     portWriteCmd(0x2C);   //write image data
 
     portSetDC(1);
-    portSetCS(0);
 
     // portWriteCmd(parameter);
     // for(uint32_t i = 0;i < (SDRV_ST7305_H * SDRV_ST7305_W);i++){
     //     sBSP_SPI_OLED_SendByte(gram);
     // }
     
-    sBSP_SPI_OLED_SendBytes(gram,len_bytes);
+    portWriteBytes(gram,len_bytes);
 
 
-    portSetCS(1);
 }
 
 void sDRV_ST7305_SetAll(uint8_t data){
@@ -568,13 +524,11 @@ void sDRV_ST7305_SetAll(uint8_t data){
     portWriteCmd(0x2C);   //write image data
 
     portSetDC(1);
-    portSetCS(0);
 
     // portWriteCmd(parameter);
     for(uint32_t i = 0;i < (SDRV_ST7305_H * SDRV_ST7305_W);i++){
-        sBSP_SPI_OLED_SendByte(data);
+        portWriteParam(data);
     }
-    portSetCS(1);
 }
 
 

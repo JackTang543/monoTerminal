@@ -7,25 +7,19 @@
 int sAPP_SYS_KernelInit(){
     int ret = 0;
 
-
     //初始化HAL
     if(HAL_Init() != HAL_OK){
-        // dbg_warn("")
         Error_Handler();
     }
 
     if(sBSP_RCC_Init() != 0){
-        
         Error_Handler();
     }
 
-
-    sBSP_UART_Debug_Init(115200);
-
+    // sBSP_UART_Debug_Init(115200);
+    sBSP_UART_Debug_Init(512000);
 
     cm_backtrace_init(APP_NAME,HARDWARE_VERSION,SOFEWARE_VERSION);
-
-
 
 
     sAPP_SYS_OutputDevInit();
@@ -44,7 +38,26 @@ int sAPP_SYS_SystemInit(){
 
     HAL_Delay(10);
 
+
+    sBSP_DMA_Init();
+
+
+    sBSP_SPI_LCDInit();
+
+
+
+    sBSP_QSPI_Init();
+
+    sDRV_EC11_Init();
+    sDRV_ST7305_Init();
+    if(sDRV_W25QxxJV_Init() != 0){
+        log_printfln("W25Qxx初始化失败");
+    }
+
+
     sAPP_SYS_OutputDevInit();
+    sAPP_Btns_Init();
+
 
 
     return ret;
@@ -54,7 +67,6 @@ int sAPP_SYS_SystemInit(){
 
 static void buzzer_output_callback(uint16_t id,bool lv){
     if(id == BOD_BUZZER_ID){
-        log_printfln("%u",lv);
         // sBSP_TIM_BuzzerSetEN(lv);
         sBSP_TIM_BuzzerSet(lv ? 50.0f : 0.0f);
     }

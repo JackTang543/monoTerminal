@@ -5,6 +5,7 @@
 
 extern TIM_HandleTypeDef htim14;
 extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
+extern DMA_HandleTypeDef hdma_spi1_tx;
 
 void NMI_Handler(void)
 {
@@ -99,6 +100,10 @@ void EXTI9_5_IRQHandler(){
 
 void OTG_FS_IRQHandler(void){
   HAL_PCD_IRQHandler(&hpcd_USB_OTG_FS);
+}
+
+void DMA2_Stream2_IRQHandler(void){
+  HAL_DMA_IRQHandler(&hdma_spi1_tx);
 }
 
 

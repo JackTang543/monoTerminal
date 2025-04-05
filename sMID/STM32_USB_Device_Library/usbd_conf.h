@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -33,7 +33,6 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_hal.h"
 
-extern void Error_Handler();
 /* USER CODE BEGIN INCLUDE */
 
 /* USER CODE END INCLUDE */
@@ -75,7 +74,10 @@ extern void Error_Handler();
 /*---------- -----------*/
 #define USBD_SELF_POWERED     1U
 /*---------- -----------*/
+//
 #define MSC_MEDIA_PACKET     4096U
+// #define MSC_MEDIA_PACKET     512U
+
 
 /****************************************/
 /* #define for FS and HS identification */

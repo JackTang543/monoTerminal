@@ -5,6 +5,9 @@ extern "C" {
 
 
 
+/*如果定义,切换为发布模式,所有调试字符都不编译,无断言等提示*/
+// #define RELEASE_CODE_MODE
+
 
 #define APP_NAME                    "monoTerminal"
 #define HARDWARE_VERSION            "v2"

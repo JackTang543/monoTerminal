@@ -21,5 +21,13 @@ bool sBSP_GPIO_GetEncoder1KEY(){
     return !!HAL_GPIO_ReadPin(KEY_ECKEY_GPIO,KEY_ECKEY_GPIO_PIN);
 }
 
+bool sBSP_GPIO_GetEnterKEY(){
+    return !!HAL_GPIO_ReadPin(KEY_ENTER_GPIO,KEY_ENTER_GPIO_PIN);
+}
+
+bool sBSP_GPIO_GetBackKEY(){
+    return !!HAL_GPIO_ReadPin(KEY_BACK_GPIO,KEY_BACK_GPIO_PIN);
+}
+
 
 

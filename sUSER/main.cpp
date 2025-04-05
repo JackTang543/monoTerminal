@@ -27,60 +27,104 @@
  */
 
 
+uint8_t buf[4096] = {0};
+
+
+
 int main(){
     sAPP_SYS_KernelInit();
     sAPP_SYS_SystemInit();
 
+    dwt.init(HAL_RCC_GetSysClockFreq());
+
+
+    // log_printfln("读取地址:0x1000,len=4096");
+    // sDRV_W25QxxJV_ReadBytes(0x1000,buf,4096);
+    // //一行32个数据,多行打印
+    // for(int i = 0; i < 4096; i++){
+    //     if(i % 32 == 0){
+    //         log_printfln("");
+    //     }
+    //     log_printf("0x%02X ",buf[i]);
+    // }
     
+    // log_printfln("写入地址:0x1000,len=4096,数据0x5D");
+    // for(int i = 0;i < 4096;i++){
+    //     buf[i] = 0x5D;
+    // }
+
+    // // sDRV_W25QxxJV_WritePage(0x1000,buf,4096);
+    // sDRV_W25QxxJV_SectorErase4KB(1);
+    // sDRV_W25QxxJV_WriteBytes(0x1000,buf,4096);
+
+    // for(int i = 0;i < 4096;i++){
+    //     buf[i] = 0;
+    // }
+
+    // log_printfln("读地址:0x1000,len=4096");
+    // {
+    //     sDRV_W25QxxJV_ReadBytes(0x1000,buf,4096);
+    //     //一行32个数据,多行打印
+    //     for(int i = 0; i < 4096; i++){
+    //         if(i % 32 == 0){
+    //             log_printfln("");
+    //         }
+    //         log_printf("0x%02X ",buf[i]);
+    //     }
     
-    usb_device_init();
+    // }
+
+    // for(int i = 0;i < 4096;i++){
+    //     buf[i] = 0;
+    // }
+
+    // sDRV_W25QxxJV_SectorErase4KB(1);
+
+    // log_printfln("擦除扇区1,读地址:0x1000,len=4096");
+    // sDRV_W25QxxJV_ReadBytes(0x1000,buf,4096);
+    // //一行32个数据,多行打印
+    // for(int i = 0; i < 4096; i++){
+    //     if(i % 32 == 0){
+    //         log_printfln("");
+    //     }
+    //     log_printf("0x%02X ",buf[i]);
+    // }
 
 
-    sAPP_Btns_Init();
 
-    sDRV_EC11_Init();
 
-    sBSP_QSPI_Init();
-    if(sDRV_W25QxxJV_Init() != 0){
-        // dbg_println("W25Qxx初始化失败");
-    }
-
-    sAPP_Tasks_CreateAll();
     
-    HAL_Delay(100);
 
     log_info("系统主频:%uMHz",HAL_RCC_GetSysClockFreq() / 1'000'000);
 
     log_info("monoTerminal 初始化完成");
 
-
-    sBSP_SPI_LCDInit();
-    sDRV_ST7305_Init();
     oled.init(SDRV_ST7305_W,SDRV_ST7305_H);
-    sDRV_ST7305_SetInvShowMode(1);
-    sDRV_ST7305_SetAll(0x0);
+    sDRV_ST7305_SetInvShowMode(0);
+    // sDRV_ST7305_SetAll(0x0);
 
-    sAPP_GUI_Init();
-    sAPP_GUI_WeightsInit();
+    // sAPP_GUI_Init();
+    // sAPP_GUI_WeightsInit();
 
+    // GPIO_InitTypeDef gpio = {0};
+    // __GPIOB_CLK_ENABLE();
+    // gpio.Mode = GPIO_MODE_OUTPUT_PP;
+    // gpio.Pull = GPIO_NOPULL;
+    // gpio.Speed = GPIO_SPEED_LOW;
+    // gpio.Pin = GPIO_PIN_7;
+    // HAL_GPIO_Init(GPIOB,&gpio);
+    // HAL_GPIO_WritePin(GPIOB,GPIO_PIN_7,GPIO_PIN_SET);
 
-    
-
-
-    GPIO_InitTypeDef gpio = {0};
-    __GPIOB_CLK_ENABLE();
-    gpio.Mode = GPIO_MODE_OUTPUT_PP;
-    gpio.Pull = GPIO_NOPULL;
-    gpio.Speed = GPIO_SPEED_LOW;
-    gpio.Pin = GPIO_PIN_7;
-    HAL_GPIO_Init(GPIOB,&gpio);
-    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_7,GPIO_PIN_SET);
 
 
     sAPP_Tasks_CreateAll();
+
+    usb_device_init();
+
+
     log_info("Current free heap size: %u bytes", (unsigned int)xPortGetFreeHeapSize());
     log_info("FreeRTOS启动任务调度");
-    vTaskStartScheduler();
+    // vTaskStartScheduler();
 
     int i = 0;
 

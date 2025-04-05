@@ -114,13 +114,14 @@
           "sLIB/cm_backtrace",
           "sLIB/sDWTLib",
           "sLIB/sBinOutDrv",
-          "sMID/STM32_USB_Device_Library/Class/MSC/Inc",
-          "sMID/STM32_USB_Device_Library/Core/Inc",
           "sMID/STM32_USB_Device_Library",
           "sMID/cm_backtrace",
           "sMID/sightseerUtils",
           "sMID/lvgl",
-          "sAPP/EEZ_UI"
+          "sAPP/EEZ_UI",
+          "sMID/STM32_USB_Device_Library/Core",
+          "sMID/STM32_USB_Device_Library/Class",
+          "sMID/STM32_USB_Device_Library/Class/MSC"
         ],
         "libList": [],
         "defineList": [
@@ -162,12 +163,11 @@
             "output-debug-info": "enable"
           },
           "c/cpp-compiler": {
-            "optimization": "level-1",
+            "optimization": "level-0",
             "c99-mode": true,
             "warnings": "unspecified",
             "language-c": "gnu17",
-            "language-cpp": "gnu++17",
-            "link-time-optimization": true
+            "language-cpp": "gnu++17"
           },
           "asm-compiler": {
             "$use": "asm-auto"

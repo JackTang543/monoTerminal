@@ -199,7 +199,13 @@
   * @brief Uncomment the line below to expanse the "assert_param" macro in the
   *        HAL drivers code
   */
-#define USE_FULL_ASSERT    1U 
+
+#include "defines.h"
+#ifdef RELEASE_CODE_MODE
+  #define USE_FULL_ASSERT    0U 
+#else
+  #define USE_FULL_ASSERT    1U 
+#endif
 
 /* ################## Ethernet peripheral configuration ##################### */
 
