@@ -103,8 +103,8 @@ int main(){
     sDRV_ST7305_SetInvShowMode(0);
     // sDRV_ST7305_SetAll(0x0);
 
-    // sAPP_GUI_Init();
-    // sAPP_GUI_WeightsInit();
+    sAPP_GUI_Init();
+    sAPP_GUI_WeightsInit();
 
     // GPIO_InitTypeDef gpio = {0};
     // __GPIOB_CLK_ENABLE();
@@ -124,7 +124,7 @@ int main(){
 
     log_info("Current free heap size: %u bytes", (unsigned int)xPortGetFreeHeapSize());
     log_info("FreeRTOS启动任务调度");
-    // vTaskStartScheduler();
+    vTaskStartScheduler();
 
     int i = 0;
 

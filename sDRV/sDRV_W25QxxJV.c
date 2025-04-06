@@ -32,6 +32,8 @@
 
 #define CMD_READ_STATUS_REGISTER_2    (0x35)
 #define CMD_WRITE_STATUS_REGISTER_2   (0x31)
+#define STATUS_REGISTER_2_MSK_QSPI    (0b00000010)
+
 #define CMD_READ_STATUS_REGISTER_3    (0x15)
 #define CMD_WRITE_STATUS_REGISTER_3   (0x11)
 
@@ -90,7 +92,6 @@ static uint32_t read_device_id(void){
     sCommand.AddressMode       = QSPI_ADDRESS_1_LINE;
     //这个如果是QSPI_ADDRESS_NONE,就是不发送地址,整个通信时钟数就是:指令8 + 0 + 8*NbData=24CYCLES
     // sCommand.AddressMode       = QSPI_ADDRESS_NONE;
-
     sCommand.AddressSize       = QSPI_ADDRESS_24_BITS;
     sCommand.Address           = 0;
     sCommand.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
@@ -109,7 +110,6 @@ static uint32_t read_device_id(void){
     if(HAL_QSPI_Receive(&hqspi, data, 100) != HAL_OK){
         return 0;
     }
-
     // Device ID数据存放在data数组中，返回设备ID
     uint32_t device_id = (data[0] << 8) | data[1];  // 将厂商ID与设备ID组合起来
     return device_id;  // 返回设备ID
@@ -328,15 +328,11 @@ static int write_bytes(uint32_t addr,uint8_t* pData,uint32_t len){
 
     set_write_enable();
 
-
     //要等待busy位
     if(wait_busy(1000) != 0){
         return -2;
     }    
-
-    // log_printfln("下面的是写操作,addr=%u,pData=%u,len=%u,准备开始写入",addr,pData,len);
-
-
+    
     sCommand.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
     sCommand.Instruction       = CMD_QUAD_INPUT_PAGE_PROGRAM;
     sCommand.AddressMode       = QSPI_ADDRESS_1_LINE;
@@ -367,114 +363,16 @@ static int write_bytes(uint32_t addr,uint8_t* pData,uint32_t len){
 int sDRV_W25QxxJV_Init(){
     reset_device();
     HAL_Delay(1);
-    log_printfln("w25q128 reset ok");
-
     uint32_t dev_id = read_device_id();
-    log_printfln("dev_id=0x%04X",dev_id);
-
-    if(dev_id == 0xEF17){
-        log_printfln("dev ok");
+    if(dev_id != 0xEF17){
+        return -1;
     }
-
-    uint8_t sr1 = read_register(CMD_READ_STATUS_REGISTER_1);
-    uint8_t sr2 = read_register(CMD_READ_STATUS_REGISTER_2);
-    uint8_t sr3 = read_register(CMD_READ_STATUS_REGISTER_3);
-
-    log_printfln("SR1=0x%02X,SR2=0x%02X,SR3=0x%02X",sr1,sr2,sr3);
-
 
     //其实JVSIQ默认就工作在QuadSPI下(SR2=0x02),但是这里还是重新设置一下保险一点
-    write_register(CMD_WRITE_STATUS_REGISTER_2,sr2 | 0x02);
-    log_printfln("set w25q128 QSPI work mode");
+    uint8_t sr2 = read_register(CMD_READ_STATUS_REGISTER_2);
+    write_register(CMD_WRITE_STATUS_REGISTER_2,sr2 | STATUS_REGISTER_2_MSK_QSPI);
 
-    //turn on write enable
     set_write_enable();
-    log_printfln("set write enable");
-
-    HAL_Delay(1);
-
-    {
-        uint8_t sr1 = read_register(CMD_READ_STATUS_REGISTER_1);
-        uint8_t sr2 = read_register(CMD_READ_STATUS_REGISTER_2);
-        uint8_t sr3 = read_register(CMD_READ_STATUS_REGISTER_3);
-        log_printfln("SR1=0x%02X,SR2=0x%02X,SR3=0x%02X",sr1,sr2,sr3);
-    }
-
-
-    // log_printfln("读地址0x000000");
-
-    // //读一段数据看看
-    // uint8_t buf[128] = {0};
-    // read_bytes(0x000000,buf,128);
-    // //一行32个数据,多行打印
-    // for(int i = 0; i < 128; i++){
-    //     if(i % 16 == 0){
-    //         log_printfln("");
-    //     }
-    //     log_printf("0x%02X ",buf[i]);
-    // }
-    
-
-    // log_printfln("写入地址0x000000,0~31");
-
-    // uint8_t send_buf[32];
-    // for(int i = 0;i < 32;i++){
-    //     send_buf[i] = i;
-    // }
-    // write_bytes(0x000000,send_buf,32);
-
-    // log_printfln("读地址0x000000");
-
-    // //读一段数据看看
-    // {
-    //     uint8_t buf[128] = {0};
-    //     read_bytes(0x000000,buf,128);
-    //     //一行32个数据,多行打印
-    //     for(int i = 0; i < 128; i++){
-    //         if(i % 16 == 0){
-    //             log_printfln("");
-    //         }
-    //         log_printf("0x%02X ",buf[i]);
-    //     }
-    
-    // }
-
-    // sDRV_W25QxxJV_SectorErase4KB(0);
-
-    // log_printfln("读地址0x000000");
-
-    // //读一段数据看看
-    // {
-    //     uint8_t buf[128] = {0};
-    //     read_bytes(0x000000,buf,128);
-    //     //一行32个数据,多行打印
-    //     for(int i = 0; i < 128; i++){
-    //         if(i % 16 == 0){
-    //             log_printfln("");
-    //         }
-    //         log_printf("0x%02X ",buf[i]);
-    //     }
-    
-    // }
-
-
-
-    
-    // //写入128字节的0x81数据到0x0地址,然后读取回来,打印出来
-    // static uint8_t data[128];
-    // for(int i = 0; i < 128; i++){
-    //     data[i] = 0x01;
-    // }
-    // BSP_QSPI_Write(data,0x0,128);
-    // static uint8_t read_data[512];
-    // BSP_QSPI_FastRead(read_data,0x0,512);
-    // //一行32个数据,多行打印
-    // for(int i = 0; i < 512; i++){
-    //     if(i % 16 == 0){
-    //         dbg_println("");
-    //     }
-    //     dbg_printf("0x%02X ",read_data[i]);
-    // }
 
     return 0;
 }
@@ -630,14 +528,6 @@ int sDRV_W25QxxJV_WriteBytes(uint32_t addr, uint8_t* buf, uint32_t len)
     uint32_t bytes_written = 0;  // 已写入的字节数
     uint32_t offset = 0;         // 用于缓冲区的偏移量
 
-    // // 1. 确保写入前目标区域已经被擦除
-    // uint32_t sector_index = addr / 4096;  // 计算对应的扇区
-    // int erase_ret = sDRV_W25QxxJV_SectorErase4KB(sector_index);
-    // if (erase_ret != 0)
-    // {
-    //     return -1;  // 擦除失败
-    // }
-
     // 等待擦除完成
     while (sDRV_W25QxxJV_IsBusy())
     {
@@ -670,33 +560,6 @@ int sDRV_W25QxxJV_WriteBytes(uint32_t addr, uint8_t* buf, uint32_t len)
     // 写入成功
     return 0;
 }
-
-// void sDRV_W25QxxJV_WriteBytes(uint32_t begin_addr,uint8_t* pData,uint16_t number){
-    
-//     //sHMI_Debug_Printf("__WRITE BYTES ADDR: %#X ,NUMBER: %#X\n",begin_addr,number);
-//     uint16_t page_remain_bytes = 256 - begin_addr % 256;  //当前页还有多少个空余字节
-//     if(number <= page_remain_bytes){
-//         page_remain_bytes = number; //一页剩下的空间能写完
-//     }
-//     while(1){
-//         sDRV_W25QxxJV_WritePage(begin_addr,pData,page_remain_bytes);
-//         // sDrv_W25Qxx_WritePage(pData,begin_addr,page_remain_bytes);
-//         if(number == page_remain_bytes){
-//             break;      //写入结束
-//         }else{
-//             pData += page_remain_bytes;
-//             begin_addr += page_remain_bytes;
-            
-//             number -= page_remain_bytes;
-//             if(number > 256){
-//                 page_remain_bytes = 256;
-//             }else{
-//                 page_remain_bytes = number;
-//             }
-//         }
-        
-//     }
-// }
 
 
 

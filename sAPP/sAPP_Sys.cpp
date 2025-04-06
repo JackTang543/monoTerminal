@@ -36,22 +36,16 @@ int sAPP_SYS_SystemInit(){
     sBSP_TIM_BuzzerSet(50.0f);
     sBSP_TIM_BuzzerSetEN(1);
 
-    HAL_Delay(10);
-
-
     sBSP_DMA_Init();
-
-
     sBSP_SPI_LCDInit();
-
-
-
     sBSP_QSPI_Init();
+
 
     sDRV_EC11_Init();
     sDRV_ST7305_Init();
     if(sDRV_W25QxxJV_Init() != 0){
-        log_printfln("W25Qxx初始化失败");
+        ret = -1;
+        log_error("W25Q128初始化失败");
     }
 
 

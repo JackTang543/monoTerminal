@@ -9,14 +9,16 @@ QSPI_HandleTypeDef hqspi;
 
 void sBSP_QSPI_Init(){
     hqspi.Instance = QUADSPI;
-    // hqspi.Init.ClockPrescaler = 8;
-    hqspi.Init.ClockPrescaler = 255;
-    hqspi.Init.FifoThreshold = 1;
+    hqspi.Init.ClockPrescaler = 1;
+    // hqspi.Init.ClockPrescaler = 255;
+    // hqspi.Init.FifoThreshold = 1;
+    hqspi.Init.FifoThreshold = 32;
+
     // hqspi.Init.SampleShifting = QSPI_SAMPLE_SHIFTING_HALFCYCLE;
     hqspi.Init.SampleShifting = QSPI_SAMPLE_SHIFTING_NONE;
 
     hqspi.Init.FlashSize = 24 - 1;  //2^24=16MB
-    hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_6_CYCLE;
+    hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_2_CYCLE;
     hqspi.Init.ClockMode = QSPI_CLOCK_MODE_0;
     hqspi.Init.FlashID = QSPI_FLASH_ID_1;
     hqspi.Init.DualFlash = QSPI_DUALFLASH_DISABLE;

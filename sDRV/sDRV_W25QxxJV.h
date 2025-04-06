@@ -22,12 +22,12 @@ int sDRV_W25QxxJV_Init();
 
 int sDRV_W25QxxJV_WritePage(uint32_t addr,uint8_t* data,uint16_t len);
 int sDRV_W25QxxJV_ReadBytes(uint32_t addr,uint8_t* data,uint32_t len);
+int sDRV_W25QxxJV_WriteBytes(uint32_t begin_addr,uint8_t* pData,uint32_t number);
 int sDRV_W25QxxJV_SectorErase4KB(uint32_t sector_index);
 int sDRV_W25QxxJV_BlockErase32KB(uint32_t block_index);
 int sDRV_W25QxxJV_BlockErase64KB(uint32_t block_index);
 
-// int sDRV_W25QxxJV_WriteBytes(uint32_t addr, uint8_t* buf, uint32_t len);
-int sDRV_W25QxxJV_WriteBytes(uint32_t begin_addr,uint8_t* pData,uint32_t number);
+
 
 int sDRV_W25QxxJV_ChipErase(bool is_blocking);
 bool sDRV_W25QxxJV_IsBusy();
