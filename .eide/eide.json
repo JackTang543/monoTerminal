@@ -163,7 +163,7 @@
             "output-debug-info": "enable"
           },
           "c/cpp-compiler": {
-            "optimization": "level-0",
+            "optimization": "level-fast",
             "c99-mode": true,
             "warnings": "unspecified",
             "language-c": "gnu17",

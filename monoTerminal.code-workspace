@@ -23,7 +23,9 @@
             "string": "c",
             "string_view": "c",
             "vector": "c",
-            "cstddef": "c"
+            "cstddef": "c",
+            "__tree": "cpp",
+            "bitset": "cpp"
         },
         "[yaml]": {
             "editor.insertSpaces": true,

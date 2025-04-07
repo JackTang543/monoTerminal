@@ -20,6 +20,8 @@ enum FlowGlobalVariables {
 
 // Native global variables
 
+extern bool get_var_settings_is_screen_inv();
+extern void set_var_settings_is_screen_inv(bool value);
 
 
 #ifdef __cplusplus

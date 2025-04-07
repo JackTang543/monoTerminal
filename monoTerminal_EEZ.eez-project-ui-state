@@ -1,9 +1,12 @@
 {
   "navigation": {
-    "selectedUserPageObject": "[monoTerminal_EEZ.eez-project]:/userPages/0",
+    "selectedUserPageObject": "[monoTerminal_EEZ.eez-project]:/userPages/1",
     "selectedFontObject": "[monoTerminal_EEZ.eez-project]:/fonts/0",
+    "selectedBitmapObject": "[monoTerminal_EEZ.eez-project]:/bitmaps/2",
     "selectedLvglGroupObject": "[monoTerminal_EEZ.eez-project]:/lvglGroups/groups/0",
-    "subnavigationSelectedItems": {}
+    "subnavigationSelectedItems": {
+      "variables-tab/sub-navigation/selected-item": "Widgets"
+    }
   },
   "layoutModel": {
     "rootEditor": {
@@ -23,7 +26,7 @@
           },
           {
             "type": "border",
-            "selected": 4,
+            "selected": 1,
             "size": 240,
             "location": "right",
             "children": [
@@ -190,10 +193,20 @@
               "type": "tabset",
               "id": "EDITORS",
               "weight": 58.66755496335776,
-              "selected": 2,
               "enableDeleteWhenEmpty": false,
               "enableClose": false,
               "children": [
+                {
+                  "type": "tab",
+                  "id": "#5736d1a4-19b8-4ea9-80b1-1b32653f306a",
+                  "name": "app",
+                  "component": "editor",
+                  "config": {
+                    "objectPath": "[monoTerminal_EEZ.eez-project]:/userPages/1",
+                    "permanent": false
+                  },
+                  "icon": "svg:page"
+                },
                 {
                   "type": "tab",
                   "id": "#eb34b5a5-656d-4818-94d3-561f1af84962",
@@ -220,11 +233,11 @@
                 {
                   "type": "tab",
                   "id": "#2f15156a-5eb5-45ce-b311-ef43f9a020b4",
-                  "name": "Main",
+                  "name": "setting",
                   "component": "editor",
                   "config": {
-                    "objectPath": "[monoTerminal_EEZ.eez-project]:/userPages/0",
-                    "permanent": false
+                    "objectPath": "[monoTerminal_EEZ.eez-project]:/userPages/2",
+                    "permanent": true
                   },
                   "icon": "svg:page"
                 }
@@ -263,6 +276,14 @@
                       "component": "componentsPalette",
                       "enableClose": false,
                       "icon": "svg:components"
+                    },
+                    {
+                      "type": "tab",
+                      "id": "BREAKPOINTS_PALETTE",
+                      "name": "Breakpoints",
+                      "component": "breakpointsPanel",
+                      "enableClose": false,
+                      "icon": "svg:breakpoints_panel"
                     }
                   ]
                 }
@@ -570,7 +591,8 @@
                       "component": "bitmaps",
                       "enableClose": false
                     }
-                  ]
+                  ],
+                  "active": true
                 },
                 {
                   "type": "tabset",
@@ -1009,12 +1031,57 @@
   "objects": {
     "[monoTerminal_EEZ.eez-project]:/userPages/0[flow-state]": {
       "selection": {
-        "0": {}
+        "0": {
+          "0": {}
+        },
+        "1": {
+          "$selected": true
+        }
       },
       "transform": {
         "translate": {
-          "x": -402.9761904761905,
-          "y": -149.3183605309689
+          "x": -728.5760439918154,
+          "y": -116.51838799678922
+        },
+        "scale": 2
+      },
+      "timeline": {
+        "isEditorActive": false,
+        "position": 0,
+        "secondToPx": 200,
+        "scrollLeft": 0
+      }
+    },
+    "[monoTerminal_EEZ.eez-project]:/userPages/1[flow-state]": {
+      "selection": {
+        "0": {
+          "2": {},
+          "3": {},
+          "4": {
+            "$selected": true
+          }
+        }
+      },
+      "transform": {
+        "translate": {
+          "x": -368.800048828125,
+          "y": -206.39999389648438
+        },
+        "scale": 2
+      },
+      "timeline": {
+        "isEditorActive": false,
+        "position": 0,
+        "secondToPx": 200,
+        "scrollLeft": 0
+      }
+    },
+    "[monoTerminal_EEZ.eez-project]:/userPages/2[flow-state]": {
+      "selection": {},
+      "transform": {
+        "translate": {
+          "x": -299.2000427246094,
+          "y": -100.80000305175781
         },
         "scale": 2
       },
@@ -1038,10 +1105,13 @@
   "showComponentDescriptions": true,
   "logsPanelFilter": "all",
   "selectedStylePropertyName": "",
-  "lvglPart": "CURSOR",
-  "lvglState": "DEFAULT",
+  "lvglPart": "MAIN",
+  "lvglState": "FOCUSED",
   "lvglExpandedPropertiesGroup": [
-    "TEXT"
+    "TEXT",
+    "MISCELLANEOUS",
+    "POSITION AND SIZE",
+    "BORDER"
   ],
   "showInactiveFlowsInDebugger": true,
   "globalFlowZoom": true,

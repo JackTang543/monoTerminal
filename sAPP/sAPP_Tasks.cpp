@@ -1,6 +1,6 @@
 #include "sAPP_Tasks.hpp"
 
-
+#include "ui.h"
 
 static void print_tasks_mang();
 
@@ -31,7 +31,7 @@ static void task_bod_dev(void* param){
 
 static void task_screen_flush(void* param){
     for(;;){
-
+        ui_tick();
         lv_task_handler();
         vTaskDelay(20 / portTICK_PERIOD_MS);
 

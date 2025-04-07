@@ -8,6 +8,10 @@ extern "C" {
 #endif
 
 extern const lv_font_t ui_font_zh_16px;
+extern const lv_font_t ui_font_quartzo_36px;
+extern const lv_font_t ui_font_quartzo_80px;
+extern const lv_font_t ui_font_zh_20px;
+extern const lv_font_t ui_font_quartzo_16px;
 
 
 #ifdef __cplusplus

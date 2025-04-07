@@ -126,13 +126,38 @@ void sAPP_GUI_Init(){
 
 }
 
+#include "screens.h"
+extern groups_t groups;
 
 void sAPP_GUI_WeightsInit(){
-    ui_init();
+    ui_create_groups();
     lv_indev_set_group(indev_encoder,groups.group);
+
+
+
+    ui_init();
+
+
+
+
     // lv_indev_set_group(indev_key,groups.group);
 }
 
+
+bool settings_is_screen_inv;
+
+extern"C" bool get_var_settings_is_screen_inv(){
+    return settings_is_screen_inv;
+}
+extern"C" void set_var_settings_is_screen_inv(bool value){
+    settings_is_screen_inv = value;
+
+    if(settings_is_screen_inv){
+        sDRV_ST7305_SetInvShowMode(1);
+    }else{
+        sDRV_ST7305_SetInvShowMode(0);
+    }
+}
 
 
 
