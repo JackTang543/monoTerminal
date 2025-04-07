@@ -12,19 +12,19 @@
 
 
 static void portSendByte(uint8_t byte){
-    // sBSP_I2C1M_SendByte(AHT20_I2C_ADDR,byte);
+    sBSP_FI2C1M_SendByte(AHT20_I2C_ADDR,byte);
 }
 
 static void portSendBytes(uint8_t* p_data,uint16_t len){
-    // sBSP_I2C1M_SendBytes(AHT20_I2C_ADDR,p_data,len);
+    sBSP_FI2C1M_SendBytes(AHT20_I2C_ADDR,p_data,len);
 }
 
 static uint8_t portReadByte(){
-    // return sBSP_I2C1M_ReadByte(AHT20_I2C_ADDR);
+    return sBSP_FI2C1M_RecvByte(AHT20_I2C_ADDR);
 }
 
 static void portReadBytes(uint8_t* p_data,uint16_t len){
-    // sBSP_I2C1M_ReadBytes(AHT20_I2C_ADDR,p_data,len);
+    sBSP_FI2C1M_RecvBytes(AHT20_I2C_ADDR,p_data,len);
 }
 
 

@@ -25,8 +25,7 @@
 #include "sBinOutDev.hpp"
 #include "sGenBtnDrv2.h"
 #include "sDWTLib.hpp"
-
-
+#include "sG2D.hpp"
 #include "lvgl.h"
 
 /*middleware layer*/
@@ -38,10 +37,12 @@
 #include "sUtils.h"
 #include "usb_device.h"
 
+
 /*driver layer*/
 #include "sDRV_EC11.h"
 #include "sDRV_W25QxxJV.h"
 #include "sDRV_ST7305.h"
+#include "sDRV_AHT20.h"
 
 /*BSP layer*/
 #include "sBSP_RCC.h"
@@ -51,6 +52,7 @@
 #include "sBSP_QSPI.h"
 #include "sBSP_GPIO.h"
 #include "sBSP_DMA.h"
+#include "sBSP_FI2C.h"
 
 
 

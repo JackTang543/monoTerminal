@@ -54,6 +54,7 @@ void create_screen_main() {
             lv_textarea_set_one_line(obj, false);
             lv_textarea_set_password_mode(obj, false);
             lv_obj_set_scrollbar_mode(obj, LV_SCROLLBAR_MODE_ACTIVE);
+            lv_obj_set_scroll_dir(obj, LV_DIR_VER);
             lv_obj_set_style_text_font(obj, &ui_font_zh_16px, LV_PART_MAIN | LV_STATE_DEFAULT);
         }
     }

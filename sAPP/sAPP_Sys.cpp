@@ -21,8 +21,9 @@ int sAPP_SYS_KernelInit(){
 
     cm_backtrace_init(APP_NAME,HARDWARE_VERSION,SOFEWARE_VERSION);
 
+    dwt.init(HAL_RCC_GetSysClockFreq());
 
-    sAPP_SYS_OutputDevInit();
+
 
     return ret;
 }
@@ -30,6 +31,8 @@ int sAPP_SYS_KernelInit(){
 
 int sAPP_SYS_SystemInit(){
     int ret = 0;
+
+    
 
     sBSP_TIM_BuzzerInit();
     sBSP_TIM_BuzzerSetFreq(2700);
@@ -39,6 +42,7 @@ int sAPP_SYS_SystemInit(){
     sBSP_DMA_Init();
     sBSP_SPI_LCDInit();
     sBSP_QSPI_Init();
+    sBSP_FI2C1_Init();
 
 
     sDRV_EC11_Init();
@@ -47,10 +51,16 @@ int sAPP_SYS_SystemInit(){
         ret = -1;
         log_error("W25Q128初始化失败");
     }
+    sDRV_AHT20_Init();
 
 
     sAPP_SYS_OutputDevInit();
     sAPP_Btns_Init();
+
+
+    oled.init(SDRV_ST7305_W,SDRV_ST7305_H);
+    sDRV_ST7305_SetInvShowMode(0);
+    // sDRV_ST7305_SetAll(0x0);
 
 
 

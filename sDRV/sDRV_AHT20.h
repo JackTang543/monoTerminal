@@ -7,7 +7,7 @@ extern "C"{
 
 #include "stm32f4xx_hal.h"
 #include "stdbool.h"
-#include "sBSP_I2C.h"
+#include "sBSP_FI2C.h"
 
 
 void sDRV_AHT20_Init();
