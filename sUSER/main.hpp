@@ -43,6 +43,7 @@
 #include "sDRV_W25QxxJV.h"
 #include "sDRV_ST7305.h"
 #include "sDRV_AHT20.h"
+#include "sDRV_DS3231.h"
 
 /*BSP layer*/
 #include "sBSP_RCC.h"
@@ -53,11 +54,22 @@
 #include "sBSP_GPIO.h"
 #include "sBSP_DMA.h"
 #include "sBSP_FI2C.h"
+#include "sBSP_ADC.h"
 
 
 
 
+typedef struct{
+    SemaphoreHandle_t lock;
+    bool is_charging;//是否在充电状态
+    bool is_bat_full;//电池是否充满
+    float mcu_temp; //mcu温度,degC
+    float vbat;     //电池电压,v
+    float v5v;      //usb5v总线电压,v
+}mono_t;
 
+
+extern mono_t mono;
 
 
 

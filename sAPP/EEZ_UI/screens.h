@@ -19,6 +19,7 @@ typedef struct _objects_t {
     lv_obj_t *main;
     lv_obj_t *app;
     lv_obj_t *setting;
+    lv_obj_t *page1;
     lv_obj_t *clock;
     lv_obj_t *obj0;
     lv_obj_t *obj1;
@@ -39,6 +40,7 @@ enum ScreensEnum {
     SCREEN_ID_MAIN = 1,
     SCREEN_ID_APP = 2,
     SCREEN_ID_SETTING = 3,
+    SCREEN_ID_PAGE1 = 4,
 };
 
 void create_screen_main();
@@ -52,6 +54,10 @@ void tick_screen_app();
 void create_screen_setting();
 void delete_screen_setting();
 void tick_screen_setting();
+
+void create_screen_page1();
+void delete_screen_page1();
+void tick_screen_page1();
 
 void create_screen_by_id(enum ScreensEnum screenId);
 void delete_screen_by_id(enum ScreensEnum screenId);

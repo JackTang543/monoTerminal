@@ -4,6 +4,8 @@ extern "C" {
 #endif
 
 
+// #include "stm32f4xx_hal.h"
+
 
 /*如果定义,切换为发布模式,所有调试字符都不编译,无断言等提示*/
 // #define RELEASE_CODE_MODE
@@ -42,7 +44,17 @@ extern "C" {
 #define KEY_ECKEY_GPIO        GPIOB
 #define KEY_ECKEY_GPIO_PIN    GPIO_PIN_15
 
+#define DS_PWR_GPIO_CLK_EN    __GPIOC_CLK_ENABLE
+#define DS_PWR_GPIO           GPIOC
+#define DS_PWR_GPIO_PIN       GPIO_PIN_13
 
+#define TP_CHRG_GPIO_CLK_EN   __GPIOC_CLK_ENABLE
+#define TP_CHRG_GPIO          GPIOC
+#define TP_CHRG_GPIO_PIN      GPIO_PIN_7
+
+#define TP_STBY_GPIO_CLK_EN   __GPIOC_CLK_ENABLE
+#define TP_STBY_GPIO          GPIOC
+#define TP_STBY_GPIO_PIN      GPIO_PIN_6
 
 
 

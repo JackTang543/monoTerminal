@@ -14,7 +14,8 @@
     "sMID/STM32_USB_Device_Library",
     "sMID/cm_backtrace",
     "sMID/sightseerUtils",
-    "sMID/lvgl"
+    "sMID/lvgl",
+    "sMID/fatfs"
   ],
   "virtualFolder": {
     "name": "<virtual_root>",

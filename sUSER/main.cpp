@@ -3,6 +3,14 @@
 
 
 
+typedef enum{
+
+}mono_is_charging;
+
+
+
+
+mono_t mono;
 
 
 
@@ -10,14 +18,14 @@
  * v1硬件验证项目:
  * 编码器 完成
  * 两个按键 完成
- * todo TP4056充电状态反馈引脚 
+ * TP4056充电状态反馈引脚 
  * 串口 完成
  * swd下载 完成
  * 蜂鸣器 完成
  * todo sd卡sdio 4线0
  * w25q128 quadSPI 完成
  * 2.9寸单色LCD
- * todo ds3231
+ * ds3231
  * aht20
  * icm42688
  * bmp280

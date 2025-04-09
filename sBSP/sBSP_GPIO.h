@@ -10,6 +10,13 @@ extern "C"{
 
 
 
+int sBSP_GPIO_Init();
+
+bool sBSP_GPIO_GetTP4056XCHRG();
+bool sBSP_GPIO_GetTP4056XSTDBY();
+void sBSP_GPIO_SetDS3231Power(bool is_on);
+
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 
 

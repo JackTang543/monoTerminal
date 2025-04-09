@@ -29,6 +29,28 @@ static void task_bod_dev(void* param){
     }
 }
 
+static void task_status_update(void* param){
+    for(;;){
+        if(xSemaphoreTake(mono.lock,1000) == pdTRUE){
+            mono.is_bat_full = !sBSP_GPIO_GetTP4056XSTDBY();
+            mono.is_charging = !sBSP_GPIO_GetTP4056XCHRG();
+            mono.mcu_temp    = sBSP_ADC_GetMCUTemp();
+            mono.vbat        = sBSP_ADC_GetVbat();
+            mono.v5v         = sBSP_ADC_Get5V();
+
+
+            // log_printfln("is_bat_full=%u,is_charging=%u,mcu_temp=%.2f,vat=%.2f,v5v=%.2f",\
+                mono.is_bat_full,mono.is_charging,mono.mcu_temp,mono.vbat,mono.v5v);
+            xSemaphoreGive(mono.lock);
+        }else{
+            log_warn("status_update失败:获取信号量超时");
+        }
+
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+    }
+}
+
+
 static void task_screen_flush(void* param){
     for(;;){
         ui_tick();
@@ -51,6 +73,7 @@ void tasks_mang(void* param){
 void sAPP_Tasks_CreateAll(){
     xTaskCreate(task_btn_dev      , "btn_dev"      , 512 / sizeof(int), NULL, 2, NULL);
     xTaskCreate(task_bod_dev      , "bod_dev"      , 512 / sizeof(int), NULL, 2, NULL);
+    xTaskCreate(task_status_update, "status_update", 1024/ sizeof(int), NULL, 2, NULL);
     xTaskCreate(task_screen_flush , "scr_flush"    , 4096/ sizeof(int), NULL, 3, NULL);
 
 

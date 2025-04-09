@@ -32,7 +32,8 @@ int sAPP_SYS_KernelInit(){
 int sAPP_SYS_SystemInit(){
     int ret = 0;
 
-    
+    sBSP_GPIO_Init();
+    sBSP_ADC_Init();
 
     sBSP_TIM_BuzzerInit();
     sBSP_TIM_BuzzerSetFreq(2700);
@@ -52,6 +53,7 @@ int sAPP_SYS_SystemInit(){
         log_error("W25Q128初始化失败");
     }
     sDRV_AHT20_Init();
+    sDRV_DS3231_Init();
 
 
     sAPP_SYS_OutputDevInit();
@@ -62,6 +64,10 @@ int sAPP_SYS_SystemInit(){
     sDRV_ST7305_SetInvShowMode(0);
     // sDRV_ST7305_SetAll(0x0);
 
+
+
+
+    mono.lock = xSemaphoreCreateMutex();
 
 
     return ret;

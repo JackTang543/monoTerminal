@@ -28,6 +28,7 @@
 
 int sDRV_DS3231_Init(){
 
+    return 0;
 }
 
 

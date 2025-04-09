@@ -157,6 +157,17 @@ static void event_handler_cb_setting_obj6(lv_event_t *e) {
     }
 }
 
+static void event_handler_cb_page1_page1(lv_event_t *e) {
+    lv_event_code_t event = lv_event_get_code(e);
+    void *flowState = lv_event_get_user_data(e);
+    (void)flowState;
+    
+    if (event == LV_EVENT_SCREEN_LOAD_START) {
+        // group: group
+        lv_group_remove_all_objs(groups.group);
+    }
+}
+
 void create_screen_main() {
     void *flowState = getFlowState(0, 0);
     (void)flowState;
@@ -649,6 +660,56 @@ void tick_screen_setting() {
     (void)flowState;
 }
 
+void create_screen_page1() {
+    void *flowState = getFlowState(0, 3);
+    (void)flowState;
+    lv_obj_t *obj = lv_obj_create(0);
+    objects.page1 = obj;
+    lv_obj_set_pos(obj, 0, 0);
+    lv_obj_set_size(obj, 384, 168);
+    lv_obj_add_event_cb(obj, event_handler_cb_page1_page1, LV_EVENT_ALL, flowState);
+    {
+        lv_obj_t *parent_obj = obj;
+        {
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            lv_obj_set_pos(obj, 0, -27);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_obj_set_style_text_font(obj, &ui_font_zh_20px, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_label_set_text(obj, "你看看你后面呢");
+        }
+        {
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            lv_obj_set_pos(obj, 0, -1);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_obj_set_style_text_font(obj, &ui_font_zh_20px, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_label_set_text(obj, "那你再看看你后面呢");
+        }
+        {
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            lv_obj_set_pos(obj, 0, 27);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_obj_set_style_text_font(obj, &ui_font_zh_20px, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_label_set_text(obj, "那你还是在看看你后面吧");
+        }
+    }
+    
+    tick_screen_page1();
+}
+
+void delete_screen_page1() {
+    lv_obj_delete(objects.page1);
+    objects.page1 = 0;
+    deletePageFlowState(3);
+}
+
+void tick_screen_page1() {
+    void *flowState = getFlowState(0, 3);
+    (void)flowState;
+}
+
 
 void ui_create_groups() {
     if (!groups_created) {
@@ -658,8 +719,8 @@ void ui_create_groups() {
     }
 }
 
-static const char *screen_names[] = { "Main", "app", "setting" };
-static const char *object_names[] = { "main", "app", "setting", "clock", "obj0", "obj1", "obj2", "obj3", "obj4", "obj5", "obj6", "obj7", "obj8", "obj9", "obj10" };
+static const char *screen_names[] = { "Main", "app", "setting", "page1" };
+static const char *object_names[] = { "main", "app", "setting", "page1", "clock", "obj0", "obj1", "obj2", "obj3", "obj4", "obj5", "obj6", "obj7", "obj8", "obj9", "obj10" };
 static const char *group_names[] = { "group" };
 
 
@@ -668,6 +729,7 @@ create_screen_func_t create_screen_funcs[] = {
     create_screen_main,
     create_screen_app,
     create_screen_setting,
+    create_screen_page1,
 };
 void create_screen(int screen_index) {
     create_screen_funcs[screen_index]();
@@ -681,6 +743,7 @@ delete_screen_func_t delete_screen_funcs[] = {
     delete_screen_main,
     delete_screen_app,
     delete_screen_setting,
+    delete_screen_page1,
 };
 void delete_screen(int screen_index) {
     delete_screen_funcs[screen_index]();
@@ -694,6 +757,7 @@ tick_screen_func_t tick_screen_funcs[] = {
     tick_screen_main,
     tick_screen_app,
     tick_screen_setting,
+    tick_screen_page1,
 };
 void tick_screen(int screen_index) {
     tick_screen_funcs[screen_index]();
@@ -719,4 +783,5 @@ void create_screens() {
     create_screen_main();
     create_screen_app();
     create_screen_setting();
+    create_screen_page1();
 }
